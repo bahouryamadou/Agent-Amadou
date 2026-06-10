@@ -117,33 +117,37 @@ function App() {
     setScreen("results");
 
     const usedFormats = getFormats(client.id);
-    const prompt = `Tu es le meilleur expert en contenu TikTok viral au monde pour des agences françaises.
+    const ficheClient = [
+      "Nom: " + client.nom,
+      "Secteur: " + client.secteur,
+      "Adresse: " + client.adresse,
+      "Produits: " + client.produits,
+      "Cible: " + client.cible,
+      "Ton: " + client.ton,
+      "Differenciateur: " + client.differenciateur,
+      "Concurrents: " + client.concurrents,
+      "Inspiration: " + client.inspiration,
+      "Phrases de fin: " + client.phrasesFin.join(" / "),
+    ].join("\n");
 
-FICHE CLIENT :
-- Nom : ${client.nom}
-- Secteur : ${client.secteur}  
-- Adresse : ${client.adresse}
-- Produits : ${client.produits}
-- Cible : ${client.cible}
-- Ton : ${client.ton}
-- Différenciateur : ${client.differenciateur}
-- Concurrents à battre : ${client.concurrents}
-- Inspiration : ${client.inspiration}
-- Phrases de fin à utiliser : ${client.phrasesFin.join(" / ")}
+    const regles = [
+      "1. Scripts PARLES naturels minimum 70-80 mots (20-25 secondes a l oral)",
+      "2. Chaque video a UN figurant different avec role precis",
+      "3. Prix et details specifiques mentionnes a voix haute",
+      "4. Hook FORT qui arrete le scroll",
+      "5. Phrase de fin qui invite a venir en boutique",
+      "6. JAMAIS ces formats deja utilises: " + (usedFormats.length > 0 ? usedFormats.join(", ") : "aucun"),
+      "7. Varie: POV client, temoignage, comparaison, coulisses, reaction, before-after, groupe amis, parent, technicien",
+      "8. 100% naturel comme on parle dans la rue",
+    ].join("\n");
 
-BRIEF : "${brief}"
-
-RÈGLES ABSOLUES :
-1. Scripts PARLÉS naturels, minimum 70-80 mots chacun (20-25 secondes à l oral)
-2. Chaque vidéo a UN figurant différent avec rôle précis
-3. Prix et détails spécifiques mentionnés à voix haute
-4. Hook FORT qui arrête le scroll
-5. Phrase de fin qui invite à venir en boutique
-6. JAMAIS ces formats déjà utilisés : ${usedFormats.length > 0 ? usedFormats.join(", ") : "aucun"}
-7. Varie les angles : POV client, témoignage, comparaison, coulisses, réaction, before-after, groupe amis, parent, technicien...
-8. 100% naturel comme on parle dans la rue
-
-Génère ${nbVideos} scripts. Réponds uniquement en JSON valide, sans backticks, sans texte avant ou après. Format : objet avec clé videos contenant un tableau. Chaque élément a : titre, figurant, format, hook, script, son, duree, viralite.`;
+    const prompt = "Tu es le meilleur expert en contenu TikTok viral au monde pour des agences francaises.\n\n"
+      + "FICHE CLIENT:\n" + ficheClient + "\n\n"
+      + "BRIEF: " + brief + "\n\n"
+      + "REGLES ABSOLUES:\n" + regles + "\n\n"
+      + "Genere " + nbVideos + " scripts. Reponds uniquement en JSON valide, sans backticks, sans texte avant ou apres. "
+      + "Format: objet avec cle videos contenant un tableau. "
+      + "Chaque element a: titre, figurant, format, hook, script (min 70 mots), son, duree, viralite.";
 
     try {
       const res = await fetch("https://api.anthropic.com/v1/messages", {
