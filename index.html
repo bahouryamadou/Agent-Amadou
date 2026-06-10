@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RAGENCY — Agent Contenu</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #080808; color: #f0f0f0; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; }
+  textarea, input { font-family: inherit; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: #111; } ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const CLIENTS = [
+  {
+    id: "marche-de-mo", nom: "Marché de Mo'", emoji: "🛒",
+    secteur: "Supermarché halal du monde",
+    adresse: "Portet-sur-Garonne, Toulouse",
+    produits: "Ultra-frais quotidien, boucherie halal, fruits & légumes primeur, épicerie du monde (orientale, africaine, asiatique, turque), crémerie, surgelés, boulangerie. +10 000 références.",
+    cible: "Familles des communautés diverses, amateurs de produits frais et halal, quartiers sud de Toulouse",
+    ton: "Chaleureux, familial, engagé, commerçant de proximité authentique",
+    differenciateur: "Seul supermarché ethnique de cette taille en périphérie de Toulouse. 1200m². Fondé par Samir Ouaddaha. 90% des embauches profils sans emploi longue durée.",
+    phrasesFin: ["Venez au Marché de Mo', on vous attend avec le sourire.", "Passez au Marché de Mo' à Portet-sur-Garonne, on a tout ce qu'il vous faut.", "Le Marché de Mo' vous attend, à tout de suite.", "Foncez au Marché de Mo', vous allez pas regretter."],
+    concurrents: "Lidl, Aldi, Carrefour, Eden Market, tous les supermarchés halal et ethniques de France et du monde",
+    inspiration: "Meilleurs supermarchés ethniques TikTok UK/US/Dubai, boucheries halal virales",
+    couleur: "#22c55e", gradient: "linear-gradient(135deg, #16a34a, #22c55e)",
+  },
+  {
+    id: "dbc", nom: "DBC Toulouse", emoji: "📱",
+    secteur: "Téléphones reconditionnés, réparation, rachat",
+    adresse: "88 avenue de Grande-Bretagne, Toulouse",
+    produits: "Vente iPhone, Samsung, iPad, MacBook reconditionnés. Réparation écran, batterie. Rachat anciens téléphones cash. 100 points de contrôle. Garantie 12 mois. Paiement 4 fois sans frais. iPhone 15 Pro à 530€.",
+    cible: "Jeunes 18-35 ans, étudiants, petits budgets, personnes avec téléphone cassé",
+    ton: "Jeune, dynamique, accessible, prix agressifs, direct",
+    differenciateur: "11 boutiques en France. 100 points de contrôle. Note Google 4.7/5. Rachat immédiat. iPhone 15 Pro à 530€ payable en 4 fois.",
+    phrasesFin: ["Venez chez DBC Toulouse avenue de Grande-Bretagne, on s'occupe de vous.", "Passez chez DBC Toulouse, on vous attend.", "Foncez chez DBC avant d'aller ailleurs, vous allez économiser."],
+    concurrents: "Apple Store, Back Market, SFR, Orange, WeFix, toutes les boutiques reconditionné de France et du monde",
+    inspiration: "Meilleurs comptes TikTok réparation téléphone US/UK, boutiques reconditionné virales",
+    couleur: "#3b82f6", gradient: "linear-gradient(135deg, #1d4ed8, #3b82f6)",
+  },
+  {
+    id: "meta-dx", nom: "Meta DX School", emoji: "🎓",
+    secteur: "École alternance digital et business",
+    adresse: "244 route de Seysses, Toulouse",
+    produits: "Formations alternance CAP au Bac+3. Titre Pro Négociateur Technico-Commercial bac+2, Conseiller Relation Client, management, commerce, digital. Certifiée Qualiopi. Financement CPF. Réseau entreprises partenaires.",
+    cible: "Jeunes 16-30 ans cherchant alternance, personnes en reconversion, entreprises cherchant alternants",
+    ton: "Ambitieux, humain, start-up, inclusif, dynamique",
+    differenciateur: "Premier meta CFA de France. Pédagogie via metavers unique. Réseau entreprises intégré. Financé à 100% par alternance — zéro euro pour l'étudiant. Diplômes reconnus par l'État.",
+    phrasesFin: ["Venez à Meta DX School Toulouse, votre diplôme vous attend.", "Passez nous voir à Meta DX School, votre avenir commence ici.", "Foncez à Meta DX School, vous avez rien à perdre et tout à gagner."],
+    concurrents: "AFTEC, Pigier, ESICAD, IMC Alternance, TBS Education, toutes les écoles alternance de France",
+    inspiration: "Meilleurs comptes TikTok écoles alternance UK/US, témoignages étudiants viraux",
+    couleur: "#9333ea", gradient: "linear-gradient(135deg, #7c3aed, #9333ea)",
+  },
+  {
+    id: "jumbo", nom: "Jumbo", emoji: "🍗",
+    secteur: "Restaurant fast-food poulet grillé halal",
+    adresse: "61 avenue Maurice Bourgès-Maunoury, Borderouge, Toulouse",
+    produits: "Poulet grillé à la flamme sauce Piri-Piri influences mozambicaines et portugaises. Plusieurs niveaux d'épices. Wings, brochettes, burgers, wraps, pita. Patate douce, banane plantain, riz épicé. Halal. Uber Eats et Deliveroo. Ouvert 7j/7.",
+    cible: "Jeunes 18-35 ans, familles, amateurs de food exotique halal, Borderouge Toulouse",
+    ton: "Chaleureux, authentique, savoureux, exotique, généreux",
+    differenciateur: "Seul restaurant Piri-Piri halal de Toulouse. Concept afro-portugais unique. Note 4.5/5 avec 3400+ avis. Prix 10-20€.",
+    phrasesFin: ["Venez chez Jumbo Borderouge, on vous attend.", "Passez chez Jumbo, on a le meilleur poulet de Toulouse.", "Foncez chez Jumbo, le poulet il vous attend."],
+    concurrents: "Nando's, KFC, McDonald's, Dave's Hot Chicken, tous les fast-foods halal de Toulouse et du monde",
+    inspiration: "Nando's TikTok, Dave's Hot Chicken, KFC, restaurants poulet grillé viraux UK/US/Afrique",
+    couleur: "#f97316", gradient: "linear-gradient(135deg, #ea580c, #f97316)",
+  },
+];
+
+const FORMATS_KEY = "ragency_formats_v2";
+
+function App() {
+  const [screen, setScreen] = React.useState("home");
+  const [client, setClient] = React.useState(null);
+  const [brief, setBrief] = React.useState("");
+  const [nbVideos, setNbVideos] = React.useState(3);
+  const [loading, setLoading] = React.useState(false);
+  const [results, setResults] = React.useState(null);
+  const [copied, setCopied] = React.useState(null);
+  const [apiKey, setApiKey] = React.useState(() => localStorage.getItem("ragency_key") || "");
+  const [keyInput, setKeyInput] = React.useState("");
+  const [formatsUsed, setFormatsUsed] = React.useState(() => {
+    try { return JSON.parse(localStorage.getItem(FORMATS_KEY) || "{}"); } catch { return {}; }
+  });
+
+  const saveKey = () => {
+    localStorage.setItem("ragency_key", keyInput);
+    setApiKey(keyInput);
+    setScreen("home");
+  };
+
+  const getFormats = (id) => (formatsUsed[id] || []).slice(-20);
+
+  const saveFormats = (id, formats) => {
+    const updated = { ...formatsUsed, [id]: [...(formatsUsed[id] || []), ...formats] };
+    setFormatsUsed(updated);
+    localStorage.setItem(FORMATS_KEY, JSON.stringify(updated));
+  };
+
+  const copy = (text, key) => {
+    navigator.clipboard.writeText(text);
+    setCopied(key);
+    setTimeout(() => setCopied(null), 2000);
+  };
+
+  const generate = async () => {
+    if (!brief.trim() || !client || !apiKey) return;
+    setLoading(true);
+    setResults(null);
+    setScreen("results");
+
+    const usedFormats = getFormats(client.id);
+    const prompt = `Tu es le meilleur expert en contenu TikTok viral au monde pour des agences françaises.
+
+FICHE CLIENT :
+- Nom : ${client.nom}
+- Secteur : ${client.secteur}  
+- Adresse : ${client.adresse}
+- Produits : ${client.produits}
+- Cible : ${client.cible}
+- Ton : ${client.ton}
+- Différenciateur : ${client.differenciateur}
+- Concurrents à battre : ${client.concurrents}
+- Inspiration : ${client.inspiration}
+- Phrases de fin à utiliser : ${client.phrasesFin.join(" / ")}
+
+BRIEF : "${brief}"
+
+RÈGLES ABSOLUES :
+1. Scripts PARLÉS naturels, minimum 70-80 mots chacun (20-25 secondes à l oral)
+2. Chaque vidéo a UN figurant différent avec rôle précis
+3. Prix et détails spécifiques mentionnés à voix haute
+4. Hook FORT qui arrête le scroll
+5. Phrase de fin qui invite à venir en boutique
+6. JAMAIS ces formats déjà utilisés : ${usedFormats.length > 0 ? usedFormats.join(", ") : "aucun"}
+7. Varie les angles : POV client, témoignage, comparaison, coulisses, réaction, before-after, groupe amis, parent, technicien...
+8. 100% naturel comme on parle dans la rue
+
+Génère ${nbVideos} scripts. Réponds uniquement en JSON valide, sans backticks, sans texte avant ou après. Format : objet avec clé videos contenant un tableau. Chaque élément a : titre, figurant, format, hook, script, son, duree, viralite.`;
+
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true",
+        },
+        body: JSON.stringify({
+          model: "claude-opus-4-5",
+          max_tokens: 2500,
+          messages: [{ role: "user", content: prompt }],
+        }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error.message);
+      const text = data.content?.map(i => i.type === "text" ? i.text : "").join("") || "";
+      const match = text.match(/\{[\s\S]*\}/);
+      if (!match) throw new Error("Pas de JSON trouvé");
+      const parsed = JSON.parse(match[0]);
+      setResults(parsed);
+      if (parsed.videos) saveFormats(client.id, parsed.videos.map(v => v.format));
+    } catch (err) {
+      setResults({ error: true, msg: err.message });
+    }
+    setLoading(false);
+  };
+
+  // SETUP
+  if (screen === "setup") return (
+    <div style={styles.screen}>
+      <button onClick={() => setScreen("home")} style={styles.back}>← Retour</button>
+      <div style={{ marginBottom: 20 }}>
+        <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 4 }}>🔑 Clé API Anthropic</p>
+        <p style={{ fontSize: 12, color: "#555" }}>platform.claude.com → API Keys</p>
+      </div>
+      <div style={{ background: "rgba(250,204,21,0.08)", border: "1px solid rgba(250,204,21,0.2)", borderRadius: 12, padding: 14, marginBottom: 20 }}>
+        <p style={{ fontSize: 12, color: "#fde68a", lineHeight: 1.7 }}>
+          1. Va sur platform.claude.com<br/>
+          2. Clique sur API Keys<br/>
+          3. Create Key<br/>
+          4. Colle la clé ici
+        </p>
+      </div>
+      <p style={styles.label}>TA CLÉ API</p>
+      <input value={keyInput} onChange={e => setKeyInput(e.target.value)} placeholder="sk-ant-api03-..." style={{ ...styles.input, fontFamily: "monospace", fontSize: 12, marginTop: 8, marginBottom: 16 }} />
+      <button onClick={saveKey} disabled={keyInput.length < 10} style={{ ...styles.btn, background: keyInput.length >= 10 ? "linear-gradient(135deg, #ff0050, #ff6b35)" : "#111", color: keyInput.length >= 10 ? "#fff" : "#333" }}>
+        ✅ Sauvegarder
+      </button>
+    </div>
+  );
+
+  // BRIEF
+  if (screen === "brief") return (
+    <div style={styles.screen}>
+      <button onClick={() => setScreen("home")} style={styles.back}>← Retour</button>
+      <div style={{ background: `${client.couleur}18`, border: `1px solid ${client.couleur}33`, borderRadius: 14, padding: "14px 16px", marginBottom: 24, display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ width: 46, height: 46, borderRadius: 12, background: client.gradient, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>{client.emoji}</div>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontWeight: 800, fontSize: 15 }}>{client.nom}</p>
+          <p style={{ fontSize: 11, color: "#555" }}>{client.secteur}</p>
+        </div>
+        {getFormats(client.id).length > 0 && (
+          <button onClick={() => { const u = {...formatsUsed, [client.id]: []}; setFormatsUsed(u); localStorage.setItem(FORMATS_KEY, JSON.stringify(u)); }} style={{ background: "transparent", border: "1px solid #2a2a2a", borderRadius: 8, padding: "4px 10px", color: "#555", fontSize: 11, cursor: "pointer" }}>Reset</button>
+        )}
+      </div>
+
+      <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 4 }}>✍️ Brief du jour</p>
+      <p style={{ fontSize: 12, color: "#555", marginBottom: 16 }}>Décris ce que tu veux mettre en avant</p>
+
+      <textarea value={brief} onChange={e => setBrief(e.target.value)} placeholder="Ex: iPhone 15 Pro 530€ paiement 4 fois&#10;Ex: Arrivage mangues fraîches&#10;Ex: Titre Pro bac+2 financé zéro euro" rows={4} style={{ ...styles.input, resize: "none", lineHeight: 1.6, marginBottom: 20 }} />
+
+      <p style={styles.label}>NOMBRE DE VIDÉOS</p>
+      <div style={{ display: "flex", gap: 8, marginTop: 8, marginBottom: 20 }}>
+        {[3, 5, 10].map(n => (
+          <button key={n} onClick={() => setNbVideos(n)} style={{ flex: 1, padding: 10, borderRadius: 10, border: nbVideos === n ? `1px solid ${client.couleur}` : "1px solid #1e1e1e", background: nbVideos === n ? `${client.couleur}22` : "#111", color: nbVideos === n ? client.couleur : "#555", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+            {n} vidéos
+          </button>
+        ))}
+      </div>
+
+      <button onClick={generate} disabled={!brief.trim()} style={{ ...styles.btn, background: brief.trim() ? client.gradient : "#111", color: brief.trim() ? "#fff" : "#333" }}>
+        ⚡ Générer {nbVideos} scripts TikTok
+      </button>
+    </div>
+  );
+
+  // RESULTS
+  if (screen === "results") return (
+    <div style={styles.screen}>
+      <button onClick={() => { setScreen("brief"); setResults(null); }} style={styles.back}>← Retour</button>
+
+      {loading && (
+        <div style={{ textAlign: "center", padding: "60px 0" }}>
+          <div style={{ fontSize: 44, marginBottom: 16, display: "inline-block", animation: "spin 1.5s linear infinite" }}>⚡</div>
+          <p style={{ color: client.couleur, fontWeight: 700, fontSize: 16 }}>Génération en cours...</p>
+          <p style={{ color: "#444", fontSize: 13 }}>Scripts sur mesure pour {client.nom}</p>
+        </div>
+      )}
+
+      {results && results.error && (
+        <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 12, padding: 16, color: "#fca5a5", textAlign: "center" }}>
+          <p style={{ fontWeight: 700, marginBottom: 6 }}>Erreur</p>
+          <p style={{ fontSize: 12 }}>{results.msg}</p>
+        </div>
+      )}
+
+      {results && !results.error && (
+        <>
+          <div style={{ background: "#111", border: "1px solid #1e1e1e", borderRadius: 10, padding: "10px 14px", marginBottom: 20, display: "flex", justifyContent: "space-between" }}>
+            <span style={{ fontSize: 11, color: "#555", fontWeight: 700 }}>BRIEF · </span>
+            <span style={{ fontSize: 13, color: "#aaa", flex: 1, marginLeft: 6 }}>{brief}</span>
+            <span style={{ fontSize: 11, color: "#444" }}>{results.videos?.length} scripts</span>
+          </div>
+
+          {results.videos?.map((v, idx) => (
+            <div key={idx} style={{ background: "#111", border: "1px solid #1e1e1e", borderRadius: 16, padding: 18, marginBottom: 14 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+                <p style={{ fontSize: 15, fontWeight: 900, flex: 1, marginRight: 8 }}>{v.titre}</p>
+                <span style={{ fontSize: 12, fontWeight: 800, color: v.viralite >= 85 ? "#4ade80" : "#facc15", flexShrink: 0 }}>🔥 {v.viralite}%</span>
+              </div>
+
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 12 }}>
+                <span style={{ background: `${client.couleur}22`, color: client.couleur, fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 20 }}>{v.format}</span>
+                <span style={{ background: "#1a1a1a", color: "#555", fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 20 }}>{v.duree}</span>
+              </div>
+
+              <div style={{ background: "#0d0d0d", borderRadius: 8, padding: "8px 12px", marginBottom: 10 }}>
+                <span style={{ fontSize: 10, color: "#555", fontWeight: 700, letterSpacing: 1 }}>👤 FIGURANT </span>
+                <span style={{ fontSize: 12, color: "#888" }}>{v.figurant}</span>
+              </div>
+
+              <div style={{ background: `${client.couleur}11`, borderLeft: `3px solid ${client.couleur}`, borderRadius: "0 8px 8px 0", padding: "10px 12px", marginBottom: 10 }}>
+                <p style={{ fontSize: 10, color: client.couleur, fontWeight: 700, letterSpacing: 1, marginBottom: 4 }}>HOOK</p>
+                <p style={{ fontSize: 13, color: "#e0e0e0", fontWeight: 600, lineHeight: 1.5 }}>"{v.hook}"</p>
+              </div>
+
+              <div style={{ background: "#0d0d0d", borderRadius: 10, padding: 14, marginBottom: 10 }}>
+                <p style={{ fontSize: 10, color: "#555", fontWeight: 700, letterSpacing: 1, marginBottom: 8 }}>📝 SCRIPT COMPLET</p>
+                <p style={{ fontSize: 13, color: "#aaa", lineHeight: 1.8 }}>"{v.script}"</p>
+              </div>
+
+              <p style={{ fontSize: 11, color: "#444", marginBottom: 12 }}>🎵 {v.son}</p>
+
+              <div style={{ display: "flex", gap: 8 }}>
+                <button onClick={() => copy(v.script, `s${idx}`)} style={{ flex: 1, padding: "9px", borderRadius: 8, border: copied === `s${idx}` ? `1px solid ${client.couleur}` : "1px solid #1e1e1e", background: copied === `s${idx}` ? `${client.couleur}22` : "transparent", color: copied === `s${idx}` ? client.couleur : "#555", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+                  {copied === `s${idx}` ? "✅ Copié" : "📋 Script"}
+                </button>
+                <button onClick={() => copy(`🎬 ${v.titre}\n👤 ${v.figurant}\n📐 ${v.format} · ${v.duree}\n\n🎯 HOOK:\n"${v.hook}"\n\n📝 SCRIPT:\n"${v.script}"\n\n🎵 ${v.son}`, `a${idx}`)} style={{ flex: 1, padding: "9px", borderRadius: 8, border: copied === `a${idx}` ? `1px solid ${client.couleur}` : "1px solid #1e1e1e", background: copied === `a${idx}` ? `${client.couleur}22` : "transparent", color: copied === `a${idx}` ? client.couleur : "#555", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+                  {copied === `a${idx}` ? "✅ Copié" : "📤 Tout"}
+                </button>
+              </div>
+            </div>
+          ))}
+
+          <button onClick={() => { setBrief(""); setResults(null); setScreen("brief"); }} style={{ width: "100%", padding: 14, borderRadius: 12, border: "1px solid #1e1e1e", background: "transparent", color: "#555", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+            ↩ Nouveau brief
+          </button>
+        </>
+      )}
+    </div>
+  );
+
+  // HOME
+  return (
+    <div style={styles.screen}>
+      <div style={{ textAlign: "center", marginBottom: 32 }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, #ff0050, #ff6b35)", borderRadius: 20, padding: "5px 16px", fontSize: 10, fontWeight: 900, letterSpacing: 3, marginBottom: 12 }}>
+          RAGENCY — AGENT CONTENU
+        </div>
+        <h1 style={{ fontSize: 24, fontWeight: 900, letterSpacing: -0.5, marginBottom: 6 }}>Quel client ?</h1>
+        <p style={{ color: "#555", fontSize: 12 }}>Sélectionne un client et donne le brief</p>
+      </div>
+
+      {!apiKey ? (
+        <div onClick={() => setScreen("setup")} style={{ background: "rgba(250,204,21,0.08)", border: "1px dashed rgba(250,204,21,0.3)", borderRadius: 12, padding: 14, marginBottom: 20, cursor: "pointer", textAlign: "center" }}>
+          <p style={{ color: "#fde68a", fontWeight: 600, fontSize: 13 }}>⚠️ Clé API manquante</p>
+          <p style={{ color: "#666", fontSize: 11, marginTop: 4 }}>Appuie ici pour configurer</p>
+        </div>
+      ) : (
+        <div style={{ background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "8px 14px", marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ fontSize: 12, color: "#86efac" }}>✅ API connectée</span>
+          <button onClick={() => { setKeyInput(apiKey); setScreen("setup"); }} style={{ background: "transparent", border: "none", color: "#555", fontSize: 11, cursor: "pointer" }}>Changer</button>
+        </div>
+      )}
+
+      {CLIENTS.map(c => (
+        <div key={c.id} onClick={() => { if (!apiKey) { setScreen("setup"); return; } setClient(c); setBrief(""); setResults(null); setScreen("brief"); }} style={{ background: "#111", border: "1px solid #1e1e1e", borderRadius: 16, padding: 18, marginBottom: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ width: 52, height: 52, borderRadius: 14, background: c.gradient, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, flexShrink: 0 }}>{c.emoji}</div>
+          <div style={{ flex: 1 }}>
+            <p style={{ fontWeight: 800, fontSize: 16, marginBottom: 3 }}>{c.nom}</p>
+            <p style={{ fontSize: 11, color: "#555", marginBottom: 4 }}>{c.secteur}</p>
+            <p style={{ fontSize: 10, color: "#333" }}>📍 {c.adresse}</p>
+          </div>
+          <span style={{ color: "#333", fontSize: 20 }}>›</span>
+        </div>
+      ))}
+
+      <div style={{ marginTop: 24, background: "#0d0d0d", borderRadius: 12, padding: 14, border: "1px solid #1a1a1a" }}>
+        <p style={{ fontSize: 10, color: "#444", fontWeight: 700, letterSpacing: 1, marginBottom: 6 }}>LOGIQUE DE L'AGENT</p>
+        <p style={{ fontSize: 11, color: "#333", lineHeight: 1.7 }}>Scripts parlés · Min 20-25 sec · Figurants avec rôles · Prix à voix haute · Hook fort · Phrase de fin · Jamais le même format deux fois</p>
+      </div>
+    </div>
+  );
+}
+
+const styles = {
+  screen: { minHeight: "100vh", padding: "20px 16px", maxWidth: 500, margin: "0 auto" },
+  back: { background: "transparent", border: "none", color: "#555", fontSize: 13, cursor: "pointer", paddingBottom: 20, display: "block" },
+  label: { fontSize: 11, fontWeight: 700, color: "#555", letterSpacing: 1, textTransform: "uppercase" },
+  input: { width: "100%", background: "#0d0d0d", border: "1px solid #1e1e1e", borderRadius: 10, padding: "12px", color: "#f0f0f0", fontSize: 14, outline: "none", display: "block" },
+  btn: { width: "100%", padding: 14, borderRadius: 12, border: "none", fontSize: 15, fontWeight: 800, cursor: "pointer" },
+};
+
+ReactDOM.render(React.createElement(App), document.getElementById("root"));
+</script>
+</body>
+</html>
