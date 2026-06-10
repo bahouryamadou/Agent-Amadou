@@ -126,28 +126,43 @@ function App() {
       "Ton: " + client.ton,
       "Differenciateur: " + client.differenciateur,
       "Concurrents: " + client.concurrents,
-      "Inspiration: " + client.inspiration,
       "Phrases de fin: " + client.phrasesFin.join(" / "),
+    ].join("\n");
+
+    const styleRef = [
+      "STYLE DE REFERENCE - Ce qui marche sur ce compte TikTok:",
+      "- Figurant en tenue du magasin (veste verte Mo) qui parle face camera dans le magasin",
+      "- Prix annonce en GROS dans le titre de la video ET dit a voix haute dans le script",
+      "- Format court direct sans fioriture - comme filme sur le vif",
+      "- POV situations reelles du quotidien du magasin - boucherie, rayon, entree, client",
+      "- La video qui a fait 88 800 vues: Agneau + Abats = 290 euros annonce prix choc direct",
+      "- Autres formats qui marchent: 10 oeufs 1.99 euros, 2 colorations 5 euros, produits a moins de 1 euro",
+      "- Toujours ancre dans une situation reelle du magasin avec un vrai contexte",
+      "- Ton professionnel pense par une agence de communication - pas amateur",
+      "- Script naturel quand parle mais construit avec une vraie intention narrative",
+      "- Titre accrocheur avec le prix en gros a l ecran",
     ].join("\n");
 
     const regles = [
       "1. Scripts PARLES naturels minimum 70-80 mots (20-25 secondes a l oral)",
-      "2. Chaque video a UN figurant different avec role precis",
-      "3. Prix et details specifiques mentionnes a voix haute",
-      "4. Hook FORT qui arrete le scroll",
-      "5. Phrase de fin qui invite a venir en boutique",
-      "6. JAMAIS ces formats deja utilises: " + (usedFormats.length > 0 ? usedFormats.join(", ") : "aucun"),
-      "7. Varie: POV client, temoignage, comparaison, coulisses, reaction, before-after, groupe amis, parent, technicien",
-      "8. 100% naturel comme on parle dans la rue",
+      "2. Figurant en tenue du magasin OU client dans le magasin - toujours ancre dans un lieu precis",
+      "3. Prix annonce a voix haute ET visible en titre - c est le coeur de chaque video",
+      "4. Titre de video court avec le prix en gros - style: AGNEAU + ABATS = 290 euros",
+      "5. Hook qui cree la surprise ou l identification immediate",
+      "6. Phrase de fin naturelle qui invite a venir",
+      "7. JAMAIS ces formats deja utilises: " + (usedFormats.length > 0 ? usedFormats.join(", ") : "aucun"),
+      "8. Varie: employe qui presente, client qui decouvre, POV situation drole, comparaison prix, coulisses",
+      "9. Qualite agence de communication professionnelle - script construit avec intention narrative",
     ].join("\n");
 
-    const prompt = "Tu es le meilleur expert en contenu TikTok viral au monde pour des agences francaises.\n\n"
+    const prompt = "Tu es directeur artistique dans une agence de communication française specialisee en contenu TikTok viral pour des commerces de proximite.\n\n"
       + "FICHE CLIENT:\n" + ficheClient + "\n\n"
-      + "BRIEF: " + brief + "\n\n"
-      + "REGLES ABSOLUES:\n" + regles + "\n\n"
+      + "STYLE ET REFERENCE:\n" + styleRef + "\n\n"
+      + "BRIEF DU JOUR: " + brief + "\n\n"
+      + "REGLES:\n" + regles + "\n\n"
       + "Genere " + nbVideos + " scripts. Reponds uniquement en JSON valide, sans backticks, sans texte avant ou apres. "
       + "Format: objet avec cle videos contenant un tableau. "
-      + "Chaque element a: titre, figurant, format, hook, script (min 70 mots), son, duree, viralite.";
+      + "Chaque element a: titre (avec prix en gros style TikTok), figurant, format, hook, script (min 70 mots naturel et professionnel), son, duree, viralite.";
 
     try {
       const res = await fetch("https://api.anthropic.com/v1/messages", {
